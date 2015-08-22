@@ -35,11 +35,6 @@ exports.addChallenges = function(req,res){
     var newChallenge = new Challenges(challenge);
     newChallenge.save();
     return res.send();
-  // } else {
-  //   return res.status(400).send({
-  //     message: 'User is not signed in'
-  //   });
-  // }
 };
 
 // this function returns an array of challenges from challenges table
