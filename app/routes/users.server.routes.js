@@ -28,6 +28,9 @@ module.exports = function(app) {
 	app.route('/users/friends/add').post(users.add);
 	app.route('/users/friends/').get(users.retrieveFriends);
 
+	app.param('username',users.findUser);
+	app.route('/users/:username').get(users.returnUser);
+
 
 	// Setting up the users profile api
 	app.route('/users/me').get(users.me);

@@ -2,25 +2,29 @@
 	<div style=" align: top; text-align: center; float:left; overflow-y: auto">
     <div>
     <h3>
-     {{authentication.user.displayName}}
+     {{user.username}}
     </h3>
     <img src="http://ymcawellington.org.nz/wp-content/uploads/2013/07/person-placeholder.jpg" width="150px" height="150px"/>
+    <p>Name: {{user.displayName}}</p>
+    <p>Email: {{user.email}}</p>
+
     </div>
     <div>
     <h3>
       Friends List
     </h3>
     <ul>
-      <li ng-repeat="friends in friendsList">{{friends}}</li>
+      <li ng-repeat="friends in user.friendsList"><a href="#!/users/{{friends}}">{{friends}}</a></li>
     </ul>
     </div>
   </div>
   <div style="overflow:hidden; text-align: center;">
     <h3>Completed Challenges</h3>
-
-     <div ng-repeat="challenge in userChallenges">
+     <div ng-repeat="challenge in user.challenges">
        <div class="panel-heading" ng-show="challenge.completed">
           <h3 class="panel-title">{{challenge.name}}</h3>
+
+
        </div>
     </div>
  </div>

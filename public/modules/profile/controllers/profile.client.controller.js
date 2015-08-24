@@ -59,10 +59,19 @@ angular.module('profile').controller('ProfileController', ['$scope', 'Authentica
       });
      };
 
+     $scope.getUser = function(){
+      Friendsearch.getUser($scope.userName).then(function(results){
+        console.log("Results from trying to search for user" + results.data);
+        console.log(results);
+        $scope.user = results;
+      });
+     };
+
     $scope.init =function(){
-      $scope.getUserChallenges();
-      $scope.searching = false;
-      $scope.retrieveFriends();
+      // $scope.getUserChallenges();
+      // $scope.searching = false;
+      // $scope.retrieveFriends();
+      $scope.getUser();
     };
     $scope.init();
 	}

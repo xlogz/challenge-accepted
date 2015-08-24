@@ -99,6 +99,24 @@ exports.retrieveFriends = function(req, res){
   }
 };
 
+exports.findUser = function(req, res, next, userName){
+	User.find({username: userName}, function(error, user){
+		if(error){
+			next(error);
+		}else if(user){
+			req.user = user[0];
+			next();
+		}else{
+			next(new Error('Failed to find user'));
+		}
+	});
+
+};
+
+exports.returnUser = function(req, res){
+	console.log("This is the user that we found: "+ req.user);
+	res.send(req.user);
+};
 /**
  * Send User
  */
