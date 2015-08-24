@@ -152,6 +152,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       name: '',
       description: '',
       reward: 'null',
+      category: '',
       tasks: []
     };
 
@@ -166,6 +167,11 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       var data = document.getElementById('nameData').value;
       $scope.newChallenge.name = data;
       document.getElementById('taskData').value = '';
+    };
+
+    $scope.addNewCategoryName = function(){
+      var data = document.getElementById('catData').value;
+      $scope.newChallenge.category = data;
     };
 
     $scope.checkRelativeDate = function(day){
