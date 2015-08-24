@@ -1,14 +1,23 @@
 'use strict';
 
-angular.module('challenges-page').controller('AllChallengesController', ['$scope', 'Authentication', 'Todo',
+angular.module('challenges-page')
+.controller('AllChallengesController', ['$scope', 'Authentication', 'Todo', '$location',
 	function($scope, Authentication, Todo, $location) {
 
     $scope.authentication = Authentication;
+    $scope.allChallenges = [];
+    $scope.addChallenge = function(index){
+      Todo.putUserChallenge($scope.allChallenges[index]._id)
+      .then(function(res){
+        console.log("added");
+      }, function(err){
+        console.log(err);
+      });
+     };
 
-    var getAllChallenges = function(){
+    $scope.getAllChallenges = function(){
       Todo.getAllChallenges()
       .then(function(res){
-        $scope.allChallenges = [];
         for (var i = 0; i < res.data.length; i++){
             $scope.allChallenges.push(res.data[i]);
           }
@@ -19,6 +28,6 @@ angular.module('challenges-page').controller('AllChallengesController', ['$scope
       return $scope.allChallenges;
     };
 
-    getAllChallenges();
+    $scope.getAllChallenges();
   }
 ]);
