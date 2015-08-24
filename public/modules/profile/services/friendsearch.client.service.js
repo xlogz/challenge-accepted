@@ -49,11 +49,27 @@ angular.module('profile').factory('Friendsearch', ['$http',
       });
     };
 
+    var getUser = function(userName){
+    return $http({
+        method: 'GET',
+        url: '/users/'+userName
+      })
+      .then(function(response){
+      	console.log('returned user object' + response);
+      	console.log('returned user data' + response.data);
+        return response.data;
+      },
+      function(err){
+        console.log(err);
+      });
+    };
+
 		// Public API
 		return {
 			search: search,
 			add: add,
-			retrieveFriends: retrieveFriends
+			retrieveFriends: retrieveFriends,
+			getUser: getUser
 			
 		};
 	}
