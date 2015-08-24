@@ -22,10 +22,10 @@ var ChallengeSchema = new Schema({
     type: Boolean,
     default: false
   },
-   category: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Category'
-  }]
+   category: {
+    type: String,
+    default: ''
+   }
 });
 
 mongoose.model('Challenge', ChallengeSchema);
