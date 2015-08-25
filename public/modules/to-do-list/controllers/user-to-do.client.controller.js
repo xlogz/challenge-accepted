@@ -175,6 +175,11 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       $scope.newChallenge.category = data;
     };
 
+    $scope.addNewDescription = function(){
+      var data = document.getElementById('descData').value;
+      $scope.newChallenge.description = data;
+    };
+
     $scope.checkRelativeDate = function(day){
       if(day === $scope.dayModifier){
         return true;
