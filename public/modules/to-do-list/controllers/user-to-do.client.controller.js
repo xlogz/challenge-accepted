@@ -109,6 +109,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
 
     $scope.checkChallengeComplete = function(index){
       Todo.checkChallengeComplete(index).then(function(response){
+        setTimeout(function(){$scope.getUserChallenges();}, 100);
         console.log('challenge complete: '+response);
       });
     };
