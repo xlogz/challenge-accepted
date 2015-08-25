@@ -33,7 +33,7 @@
 
 
         <div ng-repeat="challenge in userChallenges" ng-init="challengeIndex = $index">
-          <div class="panel panel-primary">
+          <div class="panel" ng-class="(challenge.completed) ? 'panel-success' : 'panel-primary'">
               <div class="panel-heading">
                   <div style="border-radius:3px;width:10px;height:10px;float:right;background-color:red;color:black;text-align:center;top: -3px;margin: 3px" ng-click="removeChallenge(challengeIndex)"></div>
                   <!-- <div style="border-radius:3px;width:15px;height:15px;float:right;background-color:white;color:black;text-align:center;top: -3px;margin: 3px" ng-click="removeChallenge(challengeIndex)">+</div> -->

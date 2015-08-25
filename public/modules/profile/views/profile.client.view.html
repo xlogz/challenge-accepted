@@ -1,30 +1,38 @@
 <section data-ng-controller="ProfileController">
-	<div style=" align: top; text-align: center; float:left; overflow-y: auto">
-    <div>
-    <h3>
-     {{user.username}}
-    </h3>
+	<div style=" align: top; text-align: center; float:left; overflow-y: auto; padding-right: 50px">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+         {{user.username}}
+        </h3>
+      </div>
     <img src="http://ymcawellington.org.nz/wp-content/uploads/2013/07/person-placeholder.jpg" width="150px" height="150px"/>
     <p>Name: {{user.displayName}}</p>
     <p>Email: {{user.email}}</p>
 
     </div>
-    <div>
-    <h3>
-      Friends List
-    </h3>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+      <h3 class="panel-title">
+        Friends List
+      </h3>
+      </div>
     <ul>
       <li ng-repeat="friends in user.friendsList"><a href="#!/users/{{friends}}">{{friends}}</a></li>
     </ul>
     </div>
+    </div>
   </div>
-  <div style="overflow:hidden; text-align: center;">
-    <h3>Completed Challenges</h3>
+  <div style="overflow:hidden; text-align: center; margin: 25px">
+  <div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-tite">Completed Challenges</h3>
+    </div>
      <div ng-repeat="challenge in user.challenges">
        <div class="panel-heading" ng-show="challenge.completed">
           <h3 class="panel-title">{{challenge.name}}</h3>
 
-
+  </div>
        </div>
     </div>
  </div>
