@@ -15,6 +15,6 @@
           <li class="list-group-item list-group-item-success" 
           ng-repeat="challenge in allChallenges | filter:search">
           {{challenge.name}} <span class="pull-right">{{challenge.category}}</span>
-          <button ng-click="addChallenge($index)">Add</button><button>More Info</button></li>
+          <button ng-click="addChallenge($index)">Add</button> <span>Info: {{challenge.description}}</span></li>
           </ul>
 </section>

@@ -3,18 +3,23 @@
     <div class="panel-heading">
       <span class="btn-group">
         <h3 class="panel-title pull-left">Current Challenge Name: {{ newChallenge.name }}</h3>
-        <h3 class="panel-title pull-right">Category Name: {{ newChallenge.category }}</h3>
       </span>
       <div class="input-group">
+      <!--  Name Input Field -->
         <span class="input-group-btn">
           <button ng-click="addNewChallengeName()" class="btn btn-default" type="button">Add</button>
         </span>
         <input type="text" class="form-control" id="nameData" placeholder="Add Challenge Name">
-
+       <!--  Category Input Field -->
         <span class="input-group-btn">
           <button ng-click="addNewCategoryName()" class="btn btn-default" type="button">Add</button>
         </span>
         <input type="text" class="form-control" id="catData" placeholder="Add Category Name">
+       <!--  Description Input Field -->
+        <span class="input-group-btn">
+          <button ng-click="addNewDescription()" class="btn btn-default" type="button">Add</button>
+        </span>
+        <input type="text" class="form-control" id="descData" placeholder="Add Description">
       </div><!-- /input-group -->
         <button ng-click="submitChallenge()" type="button" class="btn btn-default">Done Adding Tasks? Submit Challenge For Everyone to Use!</button>
     </div>
