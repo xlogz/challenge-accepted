@@ -84,8 +84,11 @@ exports.toggleUserTask = function(req,res){
       }
 
       //find task and toggle its completion state
-      taskArray.forEach(function(task){
-        if(task._id.toString() === req.body.taskId){
+      console.log('the task array', taskArray);
+      taskArray.forEach(function(task, index){
+      if(task === null){
+        delete taskArray[index];
+      }else if(task._id.toString() === req.body.taskId){
           task.completed = !task.completed;
         }
       });
