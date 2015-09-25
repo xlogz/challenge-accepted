@@ -106,7 +106,9 @@ exports.toggleUserTask = function(req,res){
 // remove task from user tasks array
 exports.removeUserTasks = function(req,res){
   if(req.user){
+    console.log(User);
     return User.find({_id: req.user._id}, function(err, item){
+      console.log(item);
       item[0].tasks = item[0].tasks.filter(function(element){
         return element._id.toString() !== req.body._id;
       });
