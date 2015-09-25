@@ -1,13 +1,13 @@
 <section data-ng-controller="ProfileController">
-	<div style="text-align: center; margin-top: 10%; margin-bottom: 25%">
+	<div style="text-align: center; margin-top: 5em">
   Search Members:
   <input type="text" ng-model="userName">
   <button ng-click="search(userName)">Submit</button>
   </div>
-  <div ng-show="searching">
+  <div ng-show="searching" style="text-align:center">
   <h3>RESULTS:
   </h3>
-  <ul>
+  <ul style="list-style-type: none">
     <li ng-repeat="names in searchResults">
       {{names.username}}
       <button ng-click="add(names.username)">Add</button>
