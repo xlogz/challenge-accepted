@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
 exports.getChallenges = function(req,res){
   if(req.user){
     return Challenges.find({}, function(err, array) {
+      console.log(array);
       res.send(array);
     });
   } else {
