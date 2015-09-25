@@ -24,7 +24,7 @@ angular.module('challenges-page')
       }, function(err){
         console.log(err);
       });
-
+      console.log($scope.allChallenges);
       return $scope.allChallenges;
     };
 
