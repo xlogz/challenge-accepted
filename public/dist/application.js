@@ -43,8 +43,22 @@ angular.element(document).ready(function() {
 });
 'use strict';
 
+// Use application configuration module to register a new module
+ApplicationConfiguration.registerModule('challenges-page');
+
+'use strict';
+
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('core');
+'use strict';
+
+// Use application configuration module to register a new module
+ApplicationConfiguration.registerModule('org');
+'use strict';
+
+// Use application configuration module to register a new module
+ApplicationConfiguration.registerModule('profile');
+
 'use strict';
 
 // Use application configuration module to register a new module
@@ -56,6 +70,51 @@ ApplicationConfiguration.registerModule('to-do-list');
 ApplicationConfiguration.registerModule('users');
 'use strict';
 
+// Setting up route
+angular.module('users').config(['$stateProvider',
+  function($stateProvider) {
+    // Users state routing
+    $stateProvider.
+    state('challenges', {
+      url: '/allchallenges',
+      templateUrl: 'modules/challenges-page/views/all-challenges.client.view.html'
+    });
+  }
+]);
+'use strict';
+
+angular.module('challenges-page')
+.controller('AllChallengesController', ['$scope', 'Authentication', 'Todo', '$location',
+	function($scope, Authentication, Todo, $location) {
+
+    $scope.authentication = Authentication;
+    $scope.allChallenges = [];
+    $scope.addChallenge = function(index){
+      Todo.putUserChallenge($scope.allChallenges[index]._id)
+      .then(function(res){
+        console.log("added");
+      }, function(err){
+        console.log(err);
+      });
+     };
+
+    $scope.getAllChallenges = function(){
+      Todo.getAllChallenges()
+      .then(function(res){
+        for (var i = 0; i < res.data.length; i++){
+            $scope.allChallenges.push(res.data[i]);
+          }
+      }, function(err){
+        console.log(err);
+      });
+      console.log($scope.allChallenges);
+      return $scope.allChallenges;
+    };
+
+    $scope.getAllChallenges();
+  }
+]);
+'use strict';
 
 // Setting up route
 angular.module('core').config(['$stateProvider', '$urlRouterProvider',
@@ -148,7 +207,7 @@ angular.module('core').service('Menus', [
 				if (this.menus[menuId]) {
 					return true;
 				} else {
-					throw new Error('Menu does not exists');
+					throw new Error('Menu does not exist');
 				}
 			} else {
 				throw new Error('MenuId was not provided');
@@ -278,6 +337,184 @@ angular.module('core').service('Menus', [
 'use strict';
 
 //Setting up route
+angular.module('profile').config(['$stateProvider',
+	function($stateProvider) {
+		// Profile state routing
+		$stateProvider.
+		state('friend-search', {
+			url: '/friendsearch',
+			templateUrl: 'modules/profile/views/friend-search.client.view.html'
+		}).
+		state('profile', {
+			url: '/profile',
+			templateUrl: 'modules/profile/views/profile.client.view.html'
+		}).
+		state('userProfile',{
+			url: '/users/:username',
+			templateUrl: 'modules/profile/views/profile.client.view.html',
+			controller: ["$scope", "$stateParams", function($scope, $stateParams) {
+				$scope.userName = $stateParams.username;
+			}]
+		});
+	}
+]);
+'use strict';
+
+angular.module('profile').controller('ProfileController', ['$scope', 'Authentication', 'Todo', 'Friendsearch',
+	function($scope, Authentication, Todo, Friendsearch) {
+		// Controller Logic
+		// ...
+
+    $scope.authentication = Authentication;
+      $scope.getUserChallenges = function(){
+      Todo.getUserChallenges()
+      .then(function(res){
+        console.log('getUserChallenges res.data');
+        console.log(res.data);
+        //sets scope.userChallenges to the array of challenges the user is involved in
+        $scope.userChallenges = res.data;
+      }, function(err){
+        console.log(err);
+      })
+      .then(function(res){
+        //Returns array of all challenges available to user
+         Todo.getAllChallenges()
+        .then(function(res){
+          //filters for challenges already attached to user
+          $scope.allChallenges = [];
+          for (var i = 0; i < res.data.length; i++){
+            var toPush = true;
+            for(var j = 0; j < $scope.userChallenges.length; j++){
+              if (res.data[i]._id === $scope.userChallenges[j]._id){
+                toPush = false;
+              }
+            }
+            if(toPush){
+              $scope.allChallenges.push(res.data[i]);
+            }
+          }
+        }, function(err){
+          console.log(err);
+        });
+      });
+     };
+
+     $scope.search = function(userName){
+      console.log('searching for userName');
+      Friendsearch.search(userName).then(function(results){
+        $scope.searchResults = results;
+        $scope.searching = true;
+        console.log('results: '+ $scope.searchResults);
+      });
+     };
+     $scope.add = function(username){
+      console.log('adding' + username);
+      Friendsearch.add(username);
+     };
+
+     $scope.retrieveFriends = function(){
+      Friendsearch.retrieveFriends().then(function(results){
+        $scope.friendsList = results;
+        console.log('friends: ' + $scope.friendsList);
+      });
+     };
+
+     $scope.getUser = function(){
+      Friendsearch.getUser($scope.userName).then(function(results){
+        console.log("Results from trying to search for user" + results.data);
+        console.log(results);
+        $scope.user = results;
+      });
+     };
+
+    $scope.init =function(){
+      // $scope.getUserChallenges();
+      // $scope.searching = false;
+      // $scope.retrieveFriends();
+      $scope.getUser();
+    };
+    $scope.init();
+	}
+]);
+'use strict';
+
+angular.module('profile').factory('Friendsearch', ['$http',
+	function($http) {
+		// Friendsearch service logic
+		// ...
+		var search = function(userName){
+      return $http({
+        method: 'POST',
+        data: {userName: userName},
+        url: '/users/friends/search'
+      })
+      .then(function(response){
+      	console.log(response);
+        return response.data;
+      },
+      function(err){
+        console.log(err);
+      });
+    };
+
+    var add = function(userName){
+    return $http({
+        method: 'POST',
+        data: {userName: userName},
+        url: '/users/friends/add'
+      })
+      .then(function(response){
+      	console.log(response);
+        return response.data;
+      },
+      function(err){
+        console.log(err);
+      });
+    };
+
+    var retrieveFriends = function(userName){
+    return $http({
+        method: 'GET',
+        url: '/users/friends/'
+      })
+      .then(function(response){
+      	console.log('friends list:' + response);
+      	console.log('friends list data:' + response.data);
+        return response.data;
+      },
+      function(err){
+        console.log(err);
+      });
+    };
+
+    var getUser = function(userName){
+    return $http({
+        method: 'GET',
+        url: '/users/'+userName
+      })
+      .then(function(response){
+      	console.log('returned user object' + response);
+      	console.log('returned user data' + response.data);
+        return response.data;
+      },
+      function(err){
+        console.log(err);
+      });
+    };
+
+		// Public API
+		return {
+			search: search,
+			add: add,
+			retrieveFriends: retrieveFriends,
+			getUser: getUser
+			
+		};
+	}
+]);
+'use strict';
+
+//Setting up route
 angular.module('to-do-list').config(['$stateProvider',
 	function($stateProvider) {
 		// To do list state routing
@@ -309,7 +546,6 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       .then(function(res){
         //sets scope.tasks to the array of user tasks
         $scope.tasks = res.data;
-        console.log($scope.tasks);
       }, function(err){
         console.log(err);
       });
@@ -318,8 +554,8 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
     $scope.getUserChallenges = function(){
       Todo.getUserChallenges()
       .then(function(res){
-        console.log('getUserChallenges res.data');
-        console.log(res.data);
+        // console.log('getUserChallenges res.data');
+        // console.log(res.data);
         //sets scope.userChallenges to the array of challenges the user is involved in
         $scope.userChallenges = res.data;
       }, function(err){
@@ -370,6 +606,13 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       });
      };
 
+     $scope.removeTask = function(index){
+      console.log('removing task');
+      Todo.removeTask(index);
+      console.log('removing: ' + $scope.tasks[index].description);
+      $scope.getUserTasks();
+     };
+
     $scope.completeUserTask = function(index){
       Todo.updateUserTask($scope.tasks[index]._id)
       .then(function(res){
@@ -389,8 +632,17 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       Todo.updateChallengeTask(this.task._id, this.$parent.challenge._id) //this.task._id === right task
       .then(function(res){
         $scope.getUserChallenges();
+        $scope.checkChallengeComplete(index);
       },function(err){
         console.log(err);
+      });
+
+    };
+
+    $scope.checkChallengeComplete = function(index){
+      Todo.checkChallengeComplete(index).then(function(response){
+        setTimeout(function(){$scope.getUserChallenges();}, 100);
+        console.log('challenge complete: '+response);
       });
     };
 
@@ -433,6 +685,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       name: '',
       description: '',
       reward: 'null',
+      category: '',
       tasks: []
     };
 
@@ -447,6 +700,16 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       var data = document.getElementById('nameData').value;
       $scope.newChallenge.name = data;
       document.getElementById('taskData').value = '';
+    };
+
+    $scope.addNewCategoryName = function(){
+      var data = document.getElementById('catData').value;
+      $scope.newChallenge.category = data;
+    };
+
+    $scope.addNewDescription = function(){
+      var data = document.getElementById('descData').value;
+      $scope.newChallenge.description = data;
     };
 
     $scope.checkRelativeDate = function(day){
@@ -464,6 +727,19 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       });
      };
 
+    //removeChallengeTask
+      $scope.removeChallengeTask = function(challengeIndex, index){
+      Todo.removeChallengeTask(challengeIndex, index);
+      console.log('challenge index, index' + challengeIndex + index);
+      $scope.getUserChallenges();
+     };
+
+    //remove Challenge
+    $scope.removeChallenge = function(id){
+      Todo.removeChallenge(id);
+      console.log('removing challenge');
+      $scope.getUserChallenges();
+    };
     //Initialization function for getting initial user data
     $scope.init = function(){
       $scope.getUserTasks();
@@ -553,6 +829,21 @@ angular.module('to-do-list').factory('Todo', ['$http',
         console.log(err);
       });
     };
+
+    //Remove Task
+    var removeTask = function(index){
+      return $http({
+        method: 'POST',
+        url: '/users/tasks',
+        data: {index: index}
+      }).then(function(response){
+        return response;
+      },
+      function(err){
+        console.log(err);
+      });
+    };
+
     //Change
     var updateUserTask = function(taskId){
       return $http({
@@ -596,6 +887,46 @@ angular.module('to-do-list').factory('Todo', ['$http',
       });
     };
 
+    //Remove Challenge Task
+    var removeChallengeTask = function(challengeIndex,index){
+      return $http({
+        method: 'POST',
+        url: '/users/challenges/tasks/remove',
+        data: {index: index,
+              challengeIndex: challengeIndex}
+      })
+      .then(function(response){
+        return response;
+      },function(err){
+        console.log(err);
+      });
+    };
+
+    var removeChallenge = function(index){
+      return $http({
+        method: 'PUT',
+        url: '/users/challenges/remove',
+        data: {index: index}
+      }).then(function(response){
+        return response;
+      },function(err){
+        console.log(err);
+      });
+    };
+
+    var checkChallengeComplete = function(index){
+      return $http({
+        method: 'POST',
+        url: '/users/challenges/check',
+        data: {index: index}
+      }).then(function(response){
+        console.log('Http response for checkChallengeComplete' +response);
+        return response;
+      },function(err){
+        console.log(err);
+      });
+    };
+
     //curl -H "Content-Type: application/json" -X PUT -d '{"name":"test me","description":"test info","reward":"stuff","tasks":[{"description": "one day", "relativeDate": 1},{"description": "two day", "relativeDate": 2}]}' https://heraapphrr7.herokuapp.com/challenges
 
     // var removeUserTask = function(id){
@@ -623,7 +954,11 @@ angular.module('to-do-list').factory('Todo', ['$http',
       putUserTask: putUserTask,
       updateUserTask: updateUserTask,
       updateChallengeTask: updateChallengeTask,
-      addChallenge: addChallenge
+      addChallenge: addChallenge,
+      removeTask: removeTask,
+      removeChallengeTask: removeChallengeTask,
+      removeChallenge: removeChallenge,
+      checkChallengeComplete: checkChallengeComplete
 		};
 	}
 ]);
@@ -665,8 +1000,8 @@ angular.module('users').config(['$stateProvider',
 	function($stateProvider) {
 		// Users state routing
 		$stateProvider.
-		state('profile', {
-			url: '/settings/profile',
+		state('editProfile', {
+			url: '/settings/editProfile',
 			templateUrl: 'modules/users/views/settings/edit-profile.client.view.html'
 		}).
 		state('password', {

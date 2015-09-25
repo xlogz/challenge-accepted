@@ -14,7 +14,6 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       .then(function(res){
         //sets scope.tasks to the array of user tasks
         $scope.tasks = res.data;
-        console.log($scope.tasks);
       }, function(err){
         console.log(err);
       });
