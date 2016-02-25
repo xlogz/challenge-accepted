@@ -72,18 +72,21 @@ exports.removeChallengeTask = function(req, res){
     return User.find({_id: req.user._id}, function(err, user){
       var newArray = [];
       var newChallenges = [];
-      delete user[0].challenges[req.body.challengeIndex].tasks[req.body.index];
-      for(var i = 0; i < user[0].challenges[req.body.challengeIndex].tasks.length; i++){
-        if(user[0].challenges[req.body.challengeIndex].tasks[i] !== null){
-          newArray.push(user[0].challenges[req.body.challengeIndex].tasks[i]);
-        }
-      }
-      user[0].challenges[req.body.challengeIndex].tasks = newArray;
+      console.log("Before removal: ", user[0].challenges[req.body.challengeIndex].tasks);
+      user[0].challenges[req.body.challengeIndex].tasks.splice(req.body.index,1);
+
+      console.log("After removal: ", user[0].challenges[req.body.challengeIndex].tasks);
+      // for(var i = 0; i < user[0].challenges[req.body.challengeIndex].tasks.length; i++){
+      //   if(user[0].challenges[req.body.challengeIndex].tasks[i] === null){
+      //     user[0].challenges[req.body.challengeIndex].tasks[i].splice(i,1);
+      //   }
+      // }
+      // user[0].challenges[req.body.challengeIndex].tasks = newArray;
       console.log(user[0].challenges[req.body.challengeIndex]);
       console.log(user[0].challenges[req.body.challengeIndex].tasks);
       User.update({_id: req.user._id}, {challenges: user[0].challenges}, {upsert: true}, function(err, item) {
         res.send();
-    });
+      });
     });
   } else {
     return res.status(400).send({
@@ -98,8 +101,12 @@ exports.checkChallengeComplete = function(req, res){
   if(req.user){
     console.log('Checking if challenge completed');
     return User.find({_id: req.user._id}, function(err, user){
-      console.log(user[0].challenges[req.body.index].tasks);
+      //console.log(user[0].challenges[req.body.index].tasks);
       for(var i = 0; i < user[0].challenges[req.body.index].tasks.length; i++){
+        console.log('Is it completed?', user[0].challenges[req.body.index]); 
+        if(user[0].challenges[req.body.index].tasks[i] === null ){
+          user[0].challenges[req.body.index].tasks.splice(i,1);
+        }
         if(user[0].challenges[req.body.index].tasks[i].completed){
           completed++;
         }
