@@ -197,16 +197,15 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
 
     //removeChallengeTask
       $scope.removeChallengeTask = function(challengeIndex, index){
-      Todo.removeChallengeTask(challengeIndex, index);
+      Todo.removeChallengeTask(challengeIndex, index, function(){$scope.getUserChallenges();});
       console.log('challenge index, index' + challengeIndex + index);
-      $scope.getUserChallenges();
      };
 
     //remove Challenge
     $scope.removeChallenge = function(id){
-      Todo.removeChallenge(id);
+      Todo.removeChallenge(id, function(){$scope.getUserChallenges();});
       console.log('removing challenge');
-      $scope.getUserChallenges();
+      
     };
     //Initialization function for getting initial user data
     $scope.init = function(){
