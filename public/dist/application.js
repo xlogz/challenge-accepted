@@ -651,7 +651,6 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
     };
 
     $scope.completeChallengeTask = function(challengeIndex, index){
-      $scope.loader.toggleOn();
       // console.log('TASK ID');
       // console.log(this.task._id);
       // console.log('CHALLENGE ID');
@@ -668,7 +667,6 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
         }else{
           $scope.userChallenges[challengeIndex].tasks[index].completed = true;
         }
-        
         //$scope.getUserChallenges();
         for(var i = 0; i < $scope.userChallenges[challengeIndex].tasks; i++){
           if($scope.userChallenges[challengeIndex].tasks[i].completed){
@@ -680,10 +678,8 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
         }else{
           $scope.userChallenges[challengeIndex].completed = false;
         }
-        $scope.loader.toggleOff();
         $scope.checkChallengeComplete(challengeIndex);
       },function(err){
-        $scope.loader.toggleOff();
         console.log(err);
       });
 
