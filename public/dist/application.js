@@ -608,9 +608,9 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
 
      $scope.removeTask = function(index){
       console.log('removing task');
-      Todo.removeTask(index);
+      Todo.removeTask(index).then($scope.getUserTasks());
       console.log('removing: ' + $scope.tasks[index].description);
-      $scope.getUserTasks();
+      
      };
 
     $scope.completeUserTask = function(index){
@@ -729,16 +729,17 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
 
     //removeChallengeTask
       $scope.removeChallengeTask = function(challengeIndex, index){
-      Todo.removeChallengeTask(challengeIndex, index);
-      console.log('challenge index, index' + challengeIndex + index);
-      $scope.getUserChallenges();
+      Todo.removeChallengeTask(challengeIndex, index).then(function(){$scope.getUserChallenges();console.log('challenge index, index' + challengeIndex + index, $scope.userChallenge[challengeIndex]);});
+      $scope.userChallenges[challengeIndex].splice(index,1);
      };
 
     //remove Challenge
     $scope.removeChallenge = function(id){
-      Todo.removeChallenge(id);
-      console.log('removing challenge');
-      $scope.getUserChallenges();
+      Todo.removeChallenge(id).then(function(){$scope.getUserChallenges();console.log('removing challenge', $scope.userChallenge);});
+      $scope.userChallenges.splice(id,1); 
+      console.log('challenges after removal', $scope.userChallenge);
+      
+      
     };
     //Initialization function for getting initial user data
     $scope.init = function(){
@@ -908,6 +909,7 @@ angular.module('to-do-list').factory('Todo', ['$http',
         url: '/users/challenges/remove',
         data: {index: index}
       }).then(function(response){
+        console.log("executing callback for removeChallenge");
         return response;
       },function(err){
         console.log(err);
@@ -920,7 +922,7 @@ angular.module('to-do-list').factory('Todo', ['$http',
         url: '/users/challenges/check',
         data: {index: index}
       }).then(function(response){
-        console.log('Http response for checkChallengeComplete' +response);
+        console.log('Http response for checkChallengeComplete', response);
         return response;
       },function(err){
         console.log(err);
