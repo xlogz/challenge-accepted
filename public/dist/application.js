@@ -629,6 +629,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       // console.log(this.$parent.challenge._id);
       // console.log('COMPLETED STATE BEFORE UPDATE');
       // console.log(this.task.completed);
+      console.log($scope.userChallenges[challengeIndex]);
       var numChallenges = $scope.userChallenges[challengeIndex].tasks.length;
       var count = 0;
       Todo.updateChallengeTask(this.task._id, this.$parent.challenge._id) //this.task._id === right task
