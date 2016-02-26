@@ -623,20 +623,18 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
     };
 
     $scope.completeChallengeTask = function(challengeIndex, index){
-      console.log('TASK ID');
-      console.log(this.task._id);
-      console.log('CHALLENGE ID');
-      console.log(this.$parent.challenge._id);
-      console.log('COMPLETED STATE BEFORE UPDATE');
-      console.log(this.task.completed);
-      var challengeID = this.$parent.challenge._id
-      var taskID = this.task._id;
+      // console.log('TASK ID');
+      // console.log(this.task._id);
+      // console.log('CHALLENGE ID');
+      // console.log(this.$parent.challenge._id);
+      // console.log('COMPLETED STATE BEFORE UPDATE');
+      // console.log(this.task.completed);
 
       Todo.updateChallengeTask(this.task._id, this.$parent.challenge._id) //this.task._id === right task
-      
       .then(function(res){
         $scope.userChallenges[challengeIndex].tasks[index].completed = true;
-        $scope.checkChallengeComplete(index);
+        //$scope.getUserChallenges();
+        $scope.checkChallengeComplete(challengeIndex);
       },function(err){
         console.log(err);
       });
@@ -644,6 +642,9 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
     };
 
     $scope.checkChallengeComplete = function(index){
+      var complete = false;
+      console.log($scope.userChallenges[index]);
+
       Todo.checkChallengeComplete(index).then(function(response){
         setTimeout(function(){$scope.getUserChallenges();}, 100);
         console.log('challenge complete: '+response);
