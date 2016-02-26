@@ -257,7 +257,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       delete $scope.userChallenges[challengeIndex].tasks[index];
       console.log('tasks after removal', $scope.userChallenges[challengeIndex].tasks);
 
-      Todo.removeChallengeTask(challengeIndex, index).then(function(){$scope.userChallenges[challengeIndex].tasks.splice(index,1);$scope.loader.toggleOff();});
+      Todo.removeChallengeTask(challengeIndex, index).then(function(){$scope.getUserChallenges();$scope.loader.toggleOff();});
       console.log('challenge index, index' + challengeIndex + index);
 
      };
@@ -268,7 +268,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       console.log('current challenges before removal', $scope.userChallenges[id]);
       console.log('challenges after removal', $scope.userChallenges[id]);
 
-      Todo.removeChallenge(id).then(function(){$scope.userChallenges.splice(id,1);$scope.loader.toggleOff();});
+      Todo.removeChallenge(id).then(function(){$scope.getUserChallenges();$scope.loader.toggleOff();});
       console.log('removing challenge');
       
     };
