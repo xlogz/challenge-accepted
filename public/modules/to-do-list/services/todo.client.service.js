@@ -131,7 +131,7 @@ angular.module('to-do-list').factory('Todo', ['$http',
     };
 
     //Remove Challenge Task
-    var removeChallengeTask = function(challengeIndex,index, cb){
+    var removeChallengeTask = function(challengeIndex,index){
       return $http({
         method: 'POST',
         url: '/users/challenges/tasks/remove',
@@ -139,20 +139,20 @@ angular.module('to-do-list').factory('Todo', ['$http',
               challengeIndex: challengeIndex}
       })
       .then(function(response){
-        cb();
+        return response;
       },function(err){
         console.log(err);
       });
     };
 
-    var removeChallenge = function(index, cb){
+    var removeChallenge = function(index){
       return $http({
         method: 'PUT',
         url: '/users/challenges/remove',
         data: {index: index}
       }).then(function(response){
         console.log("executing callback for removeChallenge");
-        cb();
+        return response;
       },function(err){
         console.log(err);
       });
