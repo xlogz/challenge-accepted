@@ -634,7 +634,12 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       var count = 0;
       Todo.updateChallengeTask(this.task._id, this.$parent.challenge._id) //this.task._id === right task
       .then(function(res){
-        $scope.userChallenges[challengeIndex].tasks[index].completed = true;
+        if($scope.userChallenges[challengeIndex].tasks[index].completed){
+          $scope.userChallenges[challengeIndex].tasks[index].completed = false;
+        }else{
+          $scope.userChallenges[challengeIndex].tasks[index].completed = true;
+        }
+        
         //$scope.getUserChallenges();
         for(var i = 0; i < $scope.userChallenges[challengeIndex].tasks; i++){
           if($scope.userChallenges[challengeIndex].tasks[i].completed){
@@ -643,6 +648,8 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
         }
         if(count === numChallenges){
           $scope.userChallenges[challengeIndex].completed = true;
+        }else{
+          $scope.userChallenges[challengeIndex].completed = false;
         }
         $scope.checkChallengeComplete(challengeIndex);
       },function(err){
@@ -740,6 +747,10 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       }, function(err){
         console.log(err);
       });
+     };
+
+     $scope.toggleUserTask = function(challengeIndex, index){
+      Todo.toggleUserTask(challengeIndex, index);
      };
 
     //removeChallengeTask
@@ -950,6 +961,18 @@ angular.module('to-do-list').factory('Todo', ['$http',
       });
     };
 
+    var toggleUserTask = function(index){
+      return $http({
+        method: 'POST',
+        url: '/users/challenges/tasks/toggle',
+        data: {index: index}
+      }).then(function(response){
+        return response;
+      },function(err){
+        console.log(err);
+      });
+    };
+
     //curl -H "Content-Type: application/json" -X PUT -d '{"name":"test me","description":"test info","reward":"stuff","tasks":[{"description": "one day", "relativeDate": 1},{"description": "two day", "relativeDate": 2}]}' https://heraapphrr7.herokuapp.com/challenges
 
     // var removeUserTask = function(id){
@@ -981,7 +1004,8 @@ angular.module('to-do-list').factory('Todo', ['$http',
       removeTask: removeTask,
       removeChallengeTask: removeChallengeTask,
       removeChallenge: removeChallenge,
-      checkChallengeComplete: checkChallengeComplete
+      checkChallengeComplete: checkChallengeComplete,
+      toggleUserTask: toggleUserTask
 		};
 	}
 ]);

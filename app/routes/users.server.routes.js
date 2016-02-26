@@ -22,6 +22,7 @@ module.exports = function(app) {
 	app.route('/users/challenges/remove').put(users.removeUserChallenges); // remove challenge from user challenges array
 	app.route('/users/challenges/tasks/remove').post(users.removeChallengeTask);
 	app.route('/users/challenges/check').post(users.checkChallengeComplete);
+	app.route('/users/challenges/tasks/toggle').post(users.toggleUserTask);
 
 	//Setting up friendsList routes
 	app.route('/users/friends/search').post(users.search);

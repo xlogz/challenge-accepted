@@ -102,7 +102,12 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       var count = 0;
       Todo.updateChallengeTask(this.task._id, this.$parent.challenge._id) //this.task._id === right task
       .then(function(res){
-        $scope.userChallenges[challengeIndex].tasks[index].completed = true;
+        if($scope.userChallenges[challengeIndex].tasks[index].completed){
+          $scope.userChallenges[challengeIndex].tasks[index].completed = false;
+        }else{
+          $scope.userChallenges[challengeIndex].tasks[index].completed = true;
+        }
+        
         //$scope.getUserChallenges();
         for(var i = 0; i < $scope.userChallenges[challengeIndex].tasks; i++){
           if($scope.userChallenges[challengeIndex].tasks[i].completed){
@@ -111,6 +116,8 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
         }
         if(count === numChallenges){
           $scope.userChallenges[challengeIndex].completed = true;
+        }else{
+          $scope.userChallenges[challengeIndex].completed = false;
         }
         $scope.checkChallengeComplete(challengeIndex);
       },function(err){
@@ -208,6 +215,10 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       }, function(err){
         console.log(err);
       });
+     };
+
+     $scope.toggleUserTask = function(challengeIndex, index){
+      Todo.toggleUserTask(challengeIndex, index);
      };
 
     //removeChallengeTask
