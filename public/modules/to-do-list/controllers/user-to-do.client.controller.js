@@ -99,7 +99,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       console.log(this.task.completed);
       Todo.updateChallengeTask(this.task._id, this.$parent.challenge._id) //this.task._id === right task
       .then(function(res){
-        $scope.getUserChallenges();
+        $scope.userChallenges[this.$parent.challenge._id].tasks[this.task._id].completed = true;
         $scope.checkChallengeComplete(index);
       },function(err){
         console.log(err);
