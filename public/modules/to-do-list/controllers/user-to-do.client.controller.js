@@ -197,13 +197,13 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
 
     //removeChallengeTask
       $scope.removeChallengeTask = function(challengeIndex, index){
-      Todo.removeChallengeTask(challengeIndex, index).then(function(){$scope.getUserChallenges();});
+      Todo.removeChallengeTask(challengeIndex, index).then(function(){$scope.userChallenge[challengeIndex].splice(index,1); $scope.getUserChallenges();});
       console.log('challenge index, index' + challengeIndex + index);
      };
 
     //remove Challenge
     $scope.removeChallenge = function(id){
-      Todo.removeChallenge(id).then(function(){$scope.getUserChallenges();});
+      Todo.removeChallenge(id).then(function(){$scope.userChallenge.splice(id,1); $scope.getUserChallenges();});
       console.log('removing challenge');
       
     };
