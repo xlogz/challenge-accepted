@@ -651,6 +651,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
     };
 
     $scope.completeChallengeTask = function(challengeIndex, index){
+      $scope.loader.toggleOn();
       // console.log('TASK ID');
       // console.log(this.task._id);
       // console.log('CHALLENGE ID');
