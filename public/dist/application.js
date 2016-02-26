@@ -629,11 +629,20 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       // console.log(this.$parent.challenge._id);
       // console.log('COMPLETED STATE BEFORE UPDATE');
       // console.log(this.task.completed);
-
+      var numChallenges = $scope.userChallenges[challengeIndex].tasks.length;
+      var count = 0;
       Todo.updateChallengeTask(this.task._id, this.$parent.challenge._id) //this.task._id === right task
       .then(function(res){
         $scope.userChallenges[challengeIndex].tasks[index].completed = true;
         //$scope.getUserChallenges();
+        for(var i = 0; i < $scope.userChallenges[challengeIndex].tasks; i++){
+          if($scope.userChallenges[challengeIndex].tasks[i].completed){
+            count++;
+          }
+        }
+        if(count === numChallenges){
+          $scope.userChallenges[challengeIndex].completed = true;
+        }
         $scope.checkChallengeComplete(challengeIndex);
       },function(err){
         console.log(err);
@@ -647,7 +656,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
 
       Todo.checkChallengeComplete(index).then(function(response){
         setTimeout(function(){$scope.getUserChallenges();}, 100);
-        console.log('challenge complete: '+response);
+        console.log('challenge complete: ',response);
       });
     };
 
