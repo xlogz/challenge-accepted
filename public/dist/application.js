@@ -622,7 +622,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       });
     };
 
-    $scope.completeChallengeTask = function(index){
+    $scope.completeChallengeTask = function(challengeIndex, index){
       console.log('TASK ID');
       console.log(this.task._id);
       console.log('CHALLENGE ID');
@@ -635,7 +635,7 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
       Todo.updateChallengeTask(this.task._id, this.$parent.challenge._id) //this.task._id === right task
       
       .then(function(res){
-        $scope.userChallenges[challengeID].tasks[taskID].completed = true;
+        $scope.userChallenges[challengeIndex].tasks[index].completed = true;
         $scope.checkChallengeComplete(index);
       },function(err){
         console.log(err);
