@@ -5,21 +5,30 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
   function($scope, Authentication, Todo, $location) {
     // Controller Logic
     $scope.authentication = Authentication;
+    $scope.loading = Todo.loading;
 
 
 
     //calls Todo.getUserTasks which returns the users tasks
     $scope.getUserTasks = function(){
+      $scope.loader.toggleOn();
       Todo.getUserTasks()
       .then(function(res){
+        $scope.loader.toggleOff();
         //sets scope.tasks to the array of user tasks
         $scope.tasks = res.data;
+        // $scope.loading = false;
       }, function(err){
+        $scope.loader.toggleOff();
         console.log(err);
       });
      };
     //calls Todo.getUserChallenges which returns the array of challenges attached to the user and updates allChallenges
+
+    $scope.loader = Todo.loader;
+
     $scope.getUserChallenges = function(){
+      $scope.loader.toggleOn();
       Todo.getUserChallenges()
       .then(function(res){
         // console.log('getUserChallenges res.data');
@@ -45,8 +54,10 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
             if(toPush){
               $scope.allChallenges.push(res.data[i]);
             }
+            $scope.loader.toggleOff();
           }
         }, function(err){
+          $scope.loader.toggleOff();
           console.log(err);
         });
       });
@@ -54,43 +65,55 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
 
 
     $scope.addChallenge = function(index){
+      $scope.loader.toggleOn();
       Todo.putUserChallenge($scope.allChallenges[index]._id)
       .then(function(res){
         $scope.getUserChallenges();
+        $scope.loader.toggleOff();
       }, function(err){
+        $scope.loader.toggleOff();
         console.log(err);
       });
      };
 
     $scope.addUserTask = function(){
+      $scope.loader.toggleOn();
       var data = document.getElementById('taskData').value;
       var task = {description: data, completed: false, rewards: null};
       Todo.putUserTask(task)
       .then(function(res){
+        $scope.loader.toggleOff();
         document.getElementById('taskData').value = '';
         $scope.getUserTasks();
       }, function(err){
+        $scope.loader.toggleOff();
         console.log(err);
       });
      };
 
      $scope.removeTask = function(index){
+      $scope.loader.toggleOn();
       console.log('removing task');
-      Todo.removeTask(index).then($scope.getUserTasks());
+      Todo.removeTask(index).then(function(){$scope.getUserTasks(); $scope.loader.toggleOff();});
       console.log('removing: ' + $scope.tasks[index].description);
       
      };
 
     $scope.completeUserTask = function(index){
+
+      $scope.loader.toggleOn();
       Todo.updateUserTask($scope.tasks[index]._id)
       .then(function(res){
+        $scope.loader.toggleOff();
         $scope.getUserTasks();
       },function(err){
+        $scope.loader.toggleOff();
         console.log(err);
       });
     };
 
     $scope.completeChallengeTask = function(challengeIndex, index){
+      $scope.loader.toggleOn();
       // console.log('TASK ID');
       // console.log(this.task._id);
       // console.log('CHALLENGE ID');
@@ -119,18 +142,22 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
         }else{
           $scope.userChallenges[challengeIndex].completed = false;
         }
+        $scope.loader.toggleOff();
         $scope.checkChallengeComplete(challengeIndex);
       },function(err){
+        $scope.loader.toggleOff();
         console.log(err);
       });
 
     };
 
     $scope.checkChallengeComplete = function(index){
+      $scope.loader.toggleOn();
       var complete = false;
       console.log($scope.userChallenges[index]);
 
       Todo.checkChallengeComplete(index).then(function(response){
+        $scope.loader.toggleOff();
         setTimeout(function(){$scope.getUserChallenges();}, 100);
         console.log('challenge complete: ',response);
       });
@@ -209,8 +236,10 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
     };
 
     $scope.submitChallenge = function(){
+      $scope.loader.toggleOn();
       Todo.addChallenge($scope.newChallenge)
       .then(function(res){
+        $scope.loader.toggleOff();
         $location.path('/user-to-do');
       }, function(err){
         console.log(err);
@@ -223,21 +252,23 @@ angular.module('to-do-list').controller('UserToDoController', ['$scope', 'Authen
 
     //removeChallengeTask
       $scope.removeChallengeTask = function(challengeIndex, index){
+        $scope.loader.toggleOn();
       console.log('current tasks before removal', $scope.userChallenges[challengeIndex].tasks);
       delete $scope.userChallenges[challengeIndex].tasks[index];
       console.log('tasks after removal', $scope.userChallenges[challengeIndex].tasks);
 
-      Todo.removeChallengeTask(challengeIndex, index).then(function(){$scope.userChallenges[challengeIndex].tasks.splice(index,1);});
+      Todo.removeChallengeTask(challengeIndex, index).then(function(){$scope.userChallenges[challengeIndex].tasks.splice(index,1);$scope.loader.toggleOff();});
       console.log('challenge index, index' + challengeIndex + index);
 
      };
 
     //remove Challenge
     $scope.removeChallenge = function(id){
+      $scope.loader.toggleOn();
       console.log('current challenges before removal', $scope.userChallenges[id]);
       console.log('challenges after removal', $scope.userChallenges[id]);
 
-      Todo.removeChallenge(id).then(function(){$scope.userChallenges.splice(id,1);});
+      Todo.removeChallenge(id).then(function(){$scope.userChallenges.splice(id,1);$scope.loader.toggleOff();});
       console.log('removing challenge');
       
     };

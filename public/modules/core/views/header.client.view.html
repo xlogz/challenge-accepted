@@ -1,4 +1,5 @@
 <div ng-hide="getLocation()" class="container" data-ng-controller="HeaderController">
+<div id="loader" ng-show="loader.loading"><img src="modules/to-do-list/img/loading_spinner.gif"/></div>
 	<div class="navbar-header">
 		<button class="navbar-toggle" type="button" data-ng-click="toggleCollapsibleMenu()">
 			<span class="sr-only">Toggle navigation</span>

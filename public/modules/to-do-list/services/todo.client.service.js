@@ -17,6 +17,19 @@ angular.module('to-do-list').factory('Todo', ['$http',
       });
     };
 
+
+    var loader = {
+      loading: false,
+      toggleOn: function(){
+        this.loading = true;
+      },
+      toggleOff: function(){
+        this.loading = false;
+      }
+
+    };
+
+
     //retrieves array of user challenges from the db
     var getUserChallenges = function(){
       return $http({
@@ -215,7 +228,8 @@ angular.module('to-do-list').factory('Todo', ['$http',
       removeChallengeTask: removeChallengeTask,
       removeChallenge: removeChallenge,
       checkChallengeComplete: checkChallengeComplete,
-      toggleUserTask: toggleUserTask
+      toggleUserTask: toggleUserTask,
+      loader: loader
 		};
 	}
 ]);
